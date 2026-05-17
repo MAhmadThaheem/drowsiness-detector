@@ -3,12 +3,13 @@
 # ─────────────────────────────────────────
 
 import cv2
-import mediapipe as mp
 import numpy as np
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 from src.config import (
     LEFT_EYE, RIGHT_EYE,
     EAR_THRESHOLD, CLOSED_FRAME_LIMIT,
-    MAX_FACES, DETECTION_CONFIDENCE, TRACKING_CONFIDENCE
 )
 
 
@@ -16,7 +17,6 @@ def compute_ear(landmarks, eye_indices, frame_w, frame_h):
     """
     Eye Aspect Ratio formula:
         EAR = (|p2-p6| + |p3-p5|) / (2 * |p1-p4|)
-    Returns a float. Lower = more closed.
     """
     pts = []
     for idx in eye_indices:
@@ -32,34 +32,22 @@ def compute_ear(landmarks, eye_indices, frame_w, frame_h):
 
 
 class DrowsinessDetector:
-    """
-    Wraps MediaPipe FaceMesh.
-    Call process_frame() on each webcam frame.
-    """
 
     def __init__(self):
-        self.mp_face_mesh = mp.solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh(
-            max_num_faces=MAX_FACES,
+        self.face_mesh = mp.solutions.face_mesh.FaceMesh(
+            max_num_faces=1,
             refine_landmarks=True,
-            min_detection_confidence=DETECTION_CONFIDENCE,
-            min_tracking_confidence=TRACKING_CONFIDENCE
+            min_detection_confidence=0.7,
+            min_tracking_confidence=0.7
         )
         self.closed_frames = 0
         self.total_alerts = 0
 
     def process_frame(self, frame):
-        """
-        Analyzes one BGR frame.
-        Returns a dict:
-            ear           - average EAR (float)
-            drowsy        - True if alert should fire
-            closed_frames - current consecutive closed count
-            face_found    - True if a face was detected
-            total_alerts  - total alerts this session
-        """
         h, w = frame.shape[:2]
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # noinspection PyUnresolvedReferences
         results = self.face_mesh.process(rgb)
 
         if not results.multi_face_landmarks:

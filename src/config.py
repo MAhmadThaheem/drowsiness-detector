@@ -4,10 +4,10 @@
 # ─────────────────────────────────────────
 
 # EAR threshold — below this = eye considered closed
-EAR_THRESHOLD = 0.25
+EAR_THRESHOLD = 0.20
 
 # How many consecutive closed frames before alert fires
-CLOSED_FRAME_LIMIT = 20
+CLOSED_FRAME_LIMIT = 30
 
 # Webcam index (0 = default laptop cam)
 CAMERA_INDEX = 0
