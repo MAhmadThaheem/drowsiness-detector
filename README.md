@@ -184,7 +184,7 @@ pytest>=7.0.0
 
 **M Ahmad**
 BS Software Engineering — FAST-NUCES
-[GitHub](https://github.com/MAhmadThaheem) • [LinkedIn](https://linkedin.com/in/MAhmadThaheem)
+[GitHub](https://github.com/MAhmadThaheem) • [LinkedIn](https://www.linkedin.com/in/muhammad-ahmad-a46020369/)
 
 ---
 
